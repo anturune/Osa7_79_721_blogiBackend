@@ -1,9 +1,9 @@
-POST http://localhost:3001/api/blogs 
+POST http://localhost:3001/api/blogs
 content-type: application/json
 
 {
-"title": "Blogitus tstitus",
-"author": "Atu PAtunen",
+"title": "UUSI BLOGITUS",
+"author": "Sat unen",
 "url": "http//:urliii.url",
 "likes": 89
 }
