@@ -1,5 +1,5 @@
 //--------------------INTEGRAATIOTESTAUS ALKAA--------------
-//Nämä integraatiotestejä varten (Tietokanta mukana)
+//-------Nämä integraatiotestejä varten (Tietokanta mukana)-----
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 //Tällä otetaan käyttöön yhteisiä funktioita, ettei tarvitse kirjoittaa uusiksi
@@ -8,8 +8,77 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blogi')
+//-------Nämä integraatiotestejä varten (Tietokanta mukana)-----
+
+//-----Nämä lisätään uuden käyttäjän luomiseen liittyviin testeihin---
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
+//-----Nämä lisätään uuden käyttäjän luomiseen liittyviin testeihin---
+
+//------------UUDEN KÄYTTÄJÄN LUOMISEN TESTIT ALKAA-------------------
+describe('KÄYTTÄJÄN LUOMINEN KANTAAN', () => {
+    beforeEach(async () => {
+        //Tyhjätään testin aluksi kannassa olevat käyttäjät
+        await User.deleteMany({})
+
+        const passwordHash = await bcrypt.hash('sekret', 10)
+        //Luodaan initial käyttäjä "root"
+        const user = new User({ username: 'root', passwordHash })
+
+        await user.save()
+    })
+    //Testi käyttäjän luomiseksi
+    test('Käyttäjän luominen onnistui', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'turuukkainen',
+            name: 'Antti Muukkainen',
+            password: 'arvaatKylla',
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+        console.log('LÖYTYYKÖ KANNASTA Turuukkainen', usersAtEnd[usersAtStart.length])
+
+        const usernames = usersAtEnd.map(u => u.username)
+        expect(usernames).toContain(newUser.username)
+    })
+    //Testi, jos käyttäjä jo tietokannassa, niin luonti epäonnistuu
+    test('Käyttäjän luonti epäonnistuu, jos käyttäjätunnus jo käytössä', async () => {
+        const usersAtStart = await helper.usersInDb()
+        //Yritetään luoda käyttäjä "root" ja sen pitää epäonnistua, koska jo kantaan luotu yllä
+        const newUser = {
+            username: 'root',
+            name: 'Superuser',
+            password: 'salainen',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('`username` to be unique')
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+})
+//------------UUDEN KÄYTTÄJÄN LUOMISEN TESTIT LOPPUU------------------
 
 
+//------------INTEGRAATIOTESTIT---------------------------------------
+
+//------------INTEGRAATIOTESTIT---------------------------------------
 //Alustetaan Mongo DB deletoimalla vanhat ja lisäämäällä pari uutta
 //Tällöin aloitetaan aina alussa samasta tilanteesta
 //Huom! Lisää loppuun "30000", niin ei tule timeout erroria
@@ -179,6 +248,7 @@ describe('BLOGIN MUUTTAMINEN', () => {
 afterAll(() => {
     mongoose.connection.close()
 })
+//------------INTEGRAATIOTESTIT---------------------------------------
 //--------------------INTEGRAATIOTESTAUS LOPPUU-------------------------------------------------------------
 
 

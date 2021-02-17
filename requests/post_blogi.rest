@@ -2,8 +2,9 @@ POST http://localhost:3001/api/blogs
 content-type: application/json
 
 {
-"title": "UUSI BLOGITUS",
+"title": "UUSERI BLOGIN LISÄYKSEEN",
 "author": "Sat unen",
 "url": "http//:urliii.url",
-"likes": 89
+"likes": 89,
+"userId": "60280cace5dfc23c24cc3468"
 }

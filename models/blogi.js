@@ -16,7 +16,13 @@ const blogiSchema = new mongoose.Schema({
     title: String,
     author: String,
     url: String,
-    likes: Number
+    likes: Number,
+    //----Kirjautmiseen liittyvä lisäys eli liitetään user blogiin----
+    //Huom! ei []-sulkuja, koska vain yksi käyttäjä per blogi
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 })
 
 //Muutetaan id String muotoiseksi, koska muutoin tulee oliona skeemasta

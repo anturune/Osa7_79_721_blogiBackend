@@ -1,7 +1,10 @@
 
 //Importataan tietokanta käskyt get, post jne. käyttöön tänne
+//Blogien osalta
 const Blog = require('../models/blogi')
-
+//Importataan tietokanta käskyt get, post jne. käyttöön tänne
+//Käyttäjien osalta
+const User = require('../models/user')
 //Testiarray, jonka sisällä blogit
 const initialBlogs = [
     {
@@ -25,13 +28,19 @@ const initialBlogs = [
         __v: 0
     },
 ]
-//Haetaan kaikki blogit testin käyttöön "tests/blogi.test.js" filestä
+//Haetaan kaikki blogit testin käyttöön filen "tests/blogi.test.js" testeille
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
 }
+//Haetaan kaikki käyttäjät testin käyttöön filen "tests/blogi.test.js" testeille
+const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(u => u.toJSON())
+}
 
 module.exports = {
     initialBlogs,
-    blogsInDb
+    blogsInDb,
+    usersInDb
 }
