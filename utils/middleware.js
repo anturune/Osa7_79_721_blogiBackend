@@ -36,7 +36,7 @@ const errorHandler = (error, request, response, next) => {
 }
 
 const tokenExtractor = (request, response, next) => {
-    console.log('TULEEKO TOKEN EXTRACTORIIN', request)
+    //console.log('TULEEKO TOKEN EXTRACTORIIN', request)
     // tokenin ekstraktoiva koodi
     const authorization = request.get('authorization')
 

@@ -13,7 +13,7 @@ const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
 logger.info('connecting to', config.MONGODB_URI)
-
+//Otetaan yhteys tietokantaan
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
     .then(() => {
         logger.info('connected to MongoDB')
@@ -37,6 +37,14 @@ app.use('/api/users', usersRouter)
 //Otetaan käyttöön loginRouter ja näin mahdollistetaan/huolehditaan
 //Polulle /api/login tulevat pyynnöt
 app.use('/api/login', loginRouter)
+
+//Testejä varten router tietokannan tyhjäämiseen
+//HUOM! mukana vain jos ajetaan testimoodissa eli tyhjää testikannan
+if (process.env.NODE_ENV === 'test') {
+    const testingRouter = require('./controllers/testing')
+    app.use('/api/testing', testingRouter)
+}
+
 //Otetaan middlewaret käyttöön
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
