@@ -17,6 +17,7 @@ const blogiSchema = new mongoose.Schema({
     author: String,
     url: String,
     likes: Number,
+    comments: [],
     //----Kirjautmiseen liittyvä lisäys eli liitetään user blogiin----
     //Huom! ei []-sulkuja, koska vain yksi käyttäjä per blogi
     user: {

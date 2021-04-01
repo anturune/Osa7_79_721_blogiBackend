@@ -1,9 +1,10 @@
-PUT http://localhost:3001/api/blogs/60296068201d9739d838f2dd
+PUT http://localhost:3001/api/blogs/606461da9ca558c730fbe909
 content-type: application/json
 
 {
 "title": "PAIVITETTY BLOGI",
 "author": "Paivettynyt PAtunen",
 "url": "http//:urliii.url",
-"likes": 100
+"likes": 100,
+"comments":"muuta"
 }

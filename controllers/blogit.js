@@ -86,7 +86,7 @@ blogiRouter.post('/', async (request, response, next) => {
     //eli palauttaa olion, jonka perusteella token on laadittu
     //Tässä token on erotettu "utils/middleware.js" filessä
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    //Jos tokenia ei ole tai tokenista dekoodattu olio ei sisällä käyttäjän identiteettiä 
+    //Jos tokenia ei ole tai tokenista dekoodattu olio ei sisällä käyttäjän identiteettiä
     //(eli decodedToken.id ei ole määritelty), palautetaan virheestä kertova statuskoodi 401 unauthorized
     //ja kerrotaan syy vastauksen bodyssä
     /*
@@ -154,6 +154,12 @@ blogiRouter.put('/:id', async (request, response) => {
         url: body.url,
         author: body.author,
         likes: body.likes,
+        //Skeemassa komentti on array ja tähän tulee kuitenkin
+        //Ilman arrayn vaatimia hakasulkeita, koska uusi taulukko
+        //uudella kommentilla luodaan frontendissä
+        //HUOM! React js:ssä ei koskaan päivitetä taulukkoa vaan
+        //vanha korvataan aina uudella
+        comments:body.comments
     }
     //HUOM! { new: true } tarvitaan, jotta palautuu frontendiin
     const modifiedBlogi = await Blogi.findByIdAndUpdate(request.params.id, blogi, { new: true })
